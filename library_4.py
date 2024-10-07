@@ -1,9 +1,6 @@
 import psycopg2
-from dotenv import load_dotenv
-import os
+from db_connection import create_connection
 
-# Load environment variables from .evn file
-load_dotenv()
 
 # Node 
 class Node:
@@ -76,21 +73,6 @@ class Book:
     def __str__(self):
         status = "Available" if self.is_available else "Borrowed"
         return f"Title: {self.title}, Author: {self.author}, ISBN: {self.isbn}, Status: {status}"
-
-# Database setup
-def create_connection():
-    try:
-        conn = psycopg2.connect(
-            database=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            host=os.getenv("DB_HOST"),
-            port=os.getenv("DB_PORT")
-        )
-        return conn
-    except:
-        print("Error connecting to PostgreSQL")
-        return None
 
 # Library class with database operations
 class Library:
