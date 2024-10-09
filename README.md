@@ -4,6 +4,7 @@ This is a simple console-based Library Management System implemented in Python. 
 
 ## ✨ Features
 - Add books to the library
+- Delete books from the library
 - Borrow and return books
 - Display available and borrowed books
 - Persistent storage using PostgreSQL
