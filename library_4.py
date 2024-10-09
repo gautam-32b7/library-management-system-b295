@@ -46,6 +46,20 @@ class Library:
         finally:
             conn.close()
 
+    # Delte book
+    def delete_book(self, isbn):
+        conn = create_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("DELETE FROM books WHERE isbn = %s", (isbn,))
+            conn.commit()
+            self.bst.delete(isbn) # Delete a book from BST
+            print(f"Book deleted successfully")
+        except psycopg2.IntegrityError:
+            print(f"Book with ISBN '{isbn}' not found")
+        finally:
+            conn.close()
+
     # Borrow book
     def borrow_book(self, isbn, borrower):
         conn = create_connection()
@@ -109,13 +123,14 @@ def main():
     while True:
         print("\nLibrary Management System")
         print("1. Add Book")
-        print("2. Borrow Book")
-        print("3. Return Book")
-        print("4. View Available Books")
-        print("5. View Borrowed Books")
-        print("6. Exit")
+        print("2. Delete Book")
+        print("3. Borrow Book")
+        print("4. Return Book")
+        print("5. View Available Books")
+        print("6. View Borrowed Books")
+        print("7. Exit")
 
-        choice = input("Enter your choice (1-6): ").strip()
+        choice = input("Enter your choice (1-7): ").strip()
         if choice == '1':
             title = input("Enter book title: ")
             author = input("Enter author name: ")
@@ -123,21 +138,24 @@ def main():
             book = Book(title, author, isbn)
             library.add_book(book)
         elif choice == '2':
+            isbn = input("Enter ISBN of the book to delete: ")
+            library.delete_book(isbn)
+        elif choice == '3':
             isbn = input("Enter ISBN of the book to borrow: ")
             borrower = input("Enter your name: ")
             library.borrow_book(isbn, borrower)
-        elif choice == '3':
+        elif choice == '4':
             isbn = input("Enter ISBN of the book to return: ")
             library.return_bok(isbn)
-        elif choice == '4':
-            library.display_available_books()
         elif choice == '5':
-            library.display_borrowed_books()
+            library.display_available_books()
         elif choice == '6':
+            library.display_borrowed_books()
+        elif choice == '7':
             print("Exiting the Library Management System.")
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 6.")
+            print("Invalid choice. Please enter a number between 1 and 7.")
 
 if __name__ == "__main__":
     main()

@@ -31,6 +31,36 @@ class BST:
         else:
             print("Book with is ISBN already exists in the BST")
     
+    # Delete a book 
+    def delete(self, isbn):
+        self.root = self._delete(self.root, isbn)
+    
+    def _delete(self, node, isbn):
+        if node is None:
+            return None
+        
+        # Navigate the tree based on ISBN
+        if isbn < node.book.isbn:
+            node.left = self._delete(node.left, isbn)
+        elif isbn > node.book.isbn:
+            node.right = self._delete(node.right, isbn)
+        else:
+            if node.left is None and node.right is None:
+                return None
+            
+            if node.left is None:
+                return node.right
+            if node.right is None:
+                return node.left
+            
+            cur = node.right
+            while cur.left:
+                cur = cur.left
+            node.book.isbn = cur.book.isbn
+            node.right = self._delete(node.right, node.book.isbn)
+        
+        return node
+    
     # Search for a book in the BST based on ISBN
     def search(self, isbn):
         return self._search(self.root, isbn)
